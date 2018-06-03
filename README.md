@@ -1,6 +1,6 @@
-# <p align="center"> HD Celeba Cropper
+# <p align="center"> HD CelebA Cropper
 
-[Celeba](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset provides an aligned set `img_align_celeba.zip`. However, the size of each aligned image is **218x178**, so the faces cropped from such images would be even smaller!
+[CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset provides an aligned set `img_align_celeba.zip`. However, the size of each aligned image is **218x178**, so the faces cropped from such images would be even smaller!
 
 Here we provide a code to obtain **higher resolution** face images, by cropping the faces from the original unaligned images via 5 landmarks.
 
