@@ -37,7 +37,7 @@ Here we provide a code to obtain **higher resolution** face images, by cropping 
 
 - Examples
 
-    - 512x512 + bicubic + jpg
+    - 512x512 + bicubic + jpg (OpenCV takes \~1 hour, scikit-image takes \~4 hours)
 
         ```console
         python hd_celeba.py --data_dir path_to_dataset --crop_size 512 --order 3 --save_format jpg --n_worker 32
