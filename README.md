@@ -35,7 +35,7 @@ Here we provide a code to obtain **higher resolution** face images, by cropping 
         └── list_landmarks_celeba.txt
         ```
 
-- Example
+- Examples
 
     - 512x512 + bicubic + jpg
 
