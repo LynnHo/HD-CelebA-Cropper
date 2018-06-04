@@ -65,6 +65,7 @@ def align_crop_5pts_opencv(img,
                           Points outside the boundaries of the input are filled according
                           to the given mode.
     """
+    # set OpenCV
     import cv2
     inter = {0: cv2.INTER_NEAREST, 1: cv2.INTER_LINEAR, 2: cv2.INTER_AREA,
              3: cv2.INTER_CUBIC, 4: cv2.INTER_LANCZOS4, 5: cv2.INTER_LANCZOS4}
@@ -72,7 +73,10 @@ def align_crop_5pts_opencv(img,
               'symmetric': cv2.BORDER_REFLECT, 'reflect': cv2.BORDER_REFLECT101,
               'wrap': cv2.BORDER_WRAP}
 
-    assert align_type in ['affine', 'similarity'], "Only 'similarity' or 'affine' transform is allowed!"
+    # check
+    assert align_type in ['affine', 'similarity'], 'Invalid `align_type`! Allowed: %s!' % ['affine', 'similarity']
+    assert order in [0, 1, 2, 3, 4, 5], 'Invalid `order`! Allowed: %s!' % [0, 1, 2, 3, 4, 5]
+    assert mode in ['constant', 'edge', 'symmetric', 'reflect', 'wrap'], 'Invalid `mode`! Allowed: %s!' % ['constant', 'edge', 'symmetric', 'reflect', 'wrap']
 
     # move
     move = np.array([img.shape[1] // 2, img.shape[0] // 2])
@@ -94,15 +98,16 @@ def align_crop_5pts_opencv(img,
     # estimate transform matrix
     mean_landmarks -= np.array([mean_landmarks[0, :] + mean_landmarks[1, :]]) / 2.0  # middle point of eyes as center
     trg_landmarks = mean_landmarks * (crop_size * face_factor * landmark_factor) + move
-
-    # trg = _get_mid_points_5pts(trg_landmarks)
-    # src = _get_mid_points_5pts(src_landmarks)
-    trg = trg_landmarks
-    src = src_landmarks
     if align_type == 'affine':
-        tform = cv2.estimateAffine2D(trg, src, ransacReprojThreshold=np.Inf)[0]
+        tform = cv2.estimateAffine2D(trg_landmarks, src_landmarks, ransacReprojThreshold=np.Inf)[0]
     else:
-        tform = cv2.estimateAffinePartial2D(trg, src, ransacReprojThreshold=np.Inf)[0]
+        tform = cv2.estimateAffinePartial2D(trg_landmarks, src_landmarks, ransacReprojThreshold=np.Inf)[0]
+
+    # fix the translation to match the middle point of eyes
+    trg_mid = (trg_landmarks[0, :] + trg_landmarks[1, :]) / 2.0
+    src_mid = (src_landmarks[0, :] + src_landmarks[1, :]) / 2.0
+    new_trg_mid = cv2.transform(np.array([[trg_mid]]), tform)[0, 0]
+    tform[:, 2] += src_mid - new_trg_mid
 
     # warp image by given transform
     output_shape = (crop_size // 2 + move[1] + 1, crop_size // 2 + move[0] + 1)
@@ -151,7 +156,10 @@ def align_crop_5pts_skimage(img,
     """
     import skimage.transform as transform
 
-    assert align_type in ['affine', 'similarity'], "Only 'similarity' or 'affine' transform is allowed!"
+    # check
+    assert align_type in ['affine', 'similarity'], 'Invalid `align_type`! Allowed: %s!' % ['affine', 'similarity']
+    assert order in [0, 1, 2, 3, 4, 5], 'Invalid `order`! Allowed: %s!' % [0, 1, 2, 3, 4, 5]
+    assert mode in ['constant', 'edge', 'symmetric', 'reflect', 'wrap'], 'Invalid `mode`! Allowed: %s!' % ['constant', 'edge', 'symmetric', 'reflect', 'wrap']
 
     # move
     move = np.array([img.shape[1] // 2, img.shape[0] // 2])
@@ -173,12 +181,13 @@ def align_crop_5pts_skimage(img,
     # estimate transform matrix
     mean_landmarks -= np.array([mean_landmarks[0, :] + mean_landmarks[1, :]]) / 2.0  # middle point of eyes as center
     trg_landmarks = mean_landmarks * (crop_size * face_factor * landmark_factor) + move
+    tform = transform.estimate_transform(align_type, trg_landmarks, src_landmarks)
 
-    # trg = _get_mid_points_5pts(trg_landmarks)
-    # src = _get_mid_points_5pts(src_landmarks)
-    trg = trg_landmarks
-    src = src_landmarks
-    tform = transform.estimate_transform(align_type, trg, src)
+    # fix the translation to match the middle point of eyes
+    trg_mid = (trg_landmarks[0, :] + trg_landmarks[1, :]) / 2.0
+    src_mid = (src_landmarks[0, :] + src_landmarks[1, :]) / 2.0
+    new_trg_mid = transform.matrix_transform([trg_mid], tform.params)[0]
+    tform.params[:2, 2] += src_mid - new_trg_mid
 
     # warp image by given transform
     output_shape = (crop_size // 2 + move[1] + 1, crop_size // 2 + move[0] + 1)
