@@ -45,7 +45,7 @@ parser.add_argument('--crop_size', dest='crop_size', type=int, default=512)
 parser.add_argument('--save_format', dest='save_format', default='jpg', choices=['jpg', 'png'])
 parser.add_argument('--n_worker', dest='n_worker', type=int, default=8)
 # others
-parser.add_argument('--face_factor', dest='face_factor', type=float, default=0.65, help='The factor of face area relative to the output image.')
+parser.add_argument('--face_factor', dest='face_factor', type=float, default=0.7, help='The factor of face area relative to the output image.')
 parser.add_argument('--landmark_factor', dest='landmark_factor', type=float, default=0.35, help="The factor of landmarks' area relative to the face.")
 parser.add_argument('--align_type', dest='align_type', default='similarity', choices=['affine', 'similarity'])
 parser.add_argument('--order', dest='order', type=int, default=3, choices=[0, 1, 2, 3, 4, 5], help='The order of interpolation.')

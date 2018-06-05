@@ -37,24 +37,24 @@ Here we provide a code to obtain **higher resolution** face images, by cropping 
 
 - Examples
 
-    - 512x512 + lanczos4 (with OpenCV) + png
+    - 512x512 + lanczos4 (with OpenCV) + jpg
 
         ```console
-        python hd_celeba.py --data_dir path_to_dataset --crop_size 512 --order 4 --save_format png --n_worker 32
+        python hd_celeba.py --data_dir path_to_dataset --crop_size 512 --order 4 --save_format jpg --n_worker 32
         ```
-        <p align="center"> <img src="./pics/512_lanczos4.png" width="49.5%"> </p>
+        <p align="center"> <img src="./pics/512_lanczos4.jpg" width="49.5%"> </p>
 
-    - 512x512 + lanczos4 (with OpenCV) + png + larger face in the image (by setting `face_factor`, default is 0.65)
+    - 512x512 + lanczos4 (with OpenCV) + png + larger face in the image (by setting `face_factor`, default is 0.7)
 
         ```console
         python hd_celeba.py --data_dir path_to_dataset --crop_size 512 --order 4 --save_format png --face_factor 0.8 --n_worker 32
         ```
         <p align="center">  <img src="./pics/512_lanczos4_0.8.png" width="49.5%"> </p>
 
-    - 384x384 + bicubic + jpg
+    - 384x384 + bicubic + jpg + smaller face in the image (by setting `face_factor`, default is 0.7)
 
         ```console
-        python hd_celeba.py --data_dir path_to_dataset --crop_size 384 --order 3 --save_format jpg --n_worker 32
+        python hd_celeba.py --data_dir path_to_dataset --crop_size 384 --order 3 --save_format jpg --face_factor 0.65 --n_worker 32
         ```
         <p align="center">  <img src="./pics/384_bicubic.jpg" width="37.125%"> </p>
 
