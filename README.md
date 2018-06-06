@@ -4,9 +4,11 @@
 
 Here we provide a code to obtain **higher resolution** face images, by cropping the faces from the original unaligned images via 5 landmarks.
 
+***We also use a [deep image quality assessment](https://github.com/dmaniry/deepIQA) method to evaluate and rank the cropped image quality in [scores.txt](scores.txt), lower score the better.***
+
 ## Cropped Faces (512x512)
 
-***Notice***: There are still some low resolution cropped faces since the coppresonding original images are low resolution.
+***Notice***: There are still some low resolution cropped faces since the corresponding original images are low resolution.
 
 <p align="center">
 <img src="./pics/1.jpg" width="49.5%"> <img src="./pics/2.jpg" width="49.5%">
