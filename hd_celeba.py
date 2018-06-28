@@ -9,6 +9,7 @@ import os
 
 import cropper
 import numpy as np
+from tqdm import tqdm
 
 
 def get_mean_landmark(landmarks):
@@ -105,6 +106,7 @@ def work(i):  # a single work
     imwrite(os.path.join(save_dir, img_names[i].replace('jpg', args.save_format)), img_crop)
 
 pool = Pool(args.n_worker)
-pool.map(work, range(len(img_names)))
+for _ in tqdm(pool.imap(work, range(len(img_names))), total=len(img_names)):
+    pass
 pool.close()
 pool.join()
