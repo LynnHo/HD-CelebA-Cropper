@@ -12,24 +12,6 @@ _DEFAULT_MEAN_LANDMARKS = np.array([[-0.46911814, -0.51348481],
                                     [0.42776873, 0.45444013]])
 
 
-def _get_mid_points_5pts(landmarks):
-    left_eye = landmarks[0]
-    right_eye = landmarks[1]
-    nose = landmarks[2]
-    left_mouth = landmarks[3]
-    right_mouth = landmarks[4]
-
-    left = (left_eye + nose + left_mouth) / 3.0
-    right = (right_eye + nose + right_mouth) / 3.0
-    top = (left_eye + nose + right_eye) / 3.0
-    bottom = (left_mouth + nose + right_mouth) / 3.0
-    top_mid = (top + left + right) / 3.0
-    bottom_mid = (bottom + left + right) / 3.0
-    mid = (top_mid + bottom_mid) / 2.0
-
-    return np.array([left, right, top, bottom, mid])
-
-
 def align_crop_5pts_opencv(img,
                            src_landmarks,
                            mean_landmarks=_DEFAULT_MEAN_LANDMARKS,
