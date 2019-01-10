@@ -29,7 +29,13 @@ Here we provide a code to obtain **higher resolution** face images, by cropping 
         - **list_landmarks_celeba.txt**
             - https://pan.baidu.com/s/1eSNpdRG#list/path=%2FCelebA%2FAnno&parentPath=%2F or
             - https://drive.google.com/drive/folders/0B7EVK8r0v71pOC0wOVZlQnFfaGs
-    - unzip the data and organize the files as follow
+    - unzip the data
+
+        ```console
+        7z x img_celeba.7z.001
+        ```
+
+    - organize the files as follow
 
         ```
         path_to_dataset
