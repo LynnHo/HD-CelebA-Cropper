@@ -93,17 +93,25 @@ else:
 
 
 def work(i):  # a single work
-    img = imread(os.path.join(img_dir, img_names[i]))
-    img_crop = align_crop(img,
-                          landmarks[i],
-                          mean_lm,
-                          crop_size=args.crop_size,
-                          face_factor=args.face_factor,
-                          landmark_factor=args.landmark_factor,
-                          align_type=args.align_type,
-                          order=args.order,
-                          mode=args.mode)
-    imwrite(os.path.join(save_dir, img_names[i].replace('jpg', args.save_format)), img_crop)
+    for _ in range(3):  # try three times
+        try:
+            img = imread(os.path.join(img_dir, img_names[i]))
+            img_crop = align_crop(img,
+                                  landmarks[i],
+                                  mean_lm,
+                                  crop_size=args.crop_size,
+                                  face_factor=args.face_factor,
+                                  landmark_factor=args.landmark_factor,
+                                  align_type=args.align_type,
+                                  order=args.order,
+                                  mode=args.mode)
+            imwrite(os.path.join(save_dir, img_names[i].replace('jpg', args.save_format)), img_crop)
+            succeed = True
+            break
+        except:
+            succeed = False
+    if not succeed:
+        print('%s fails!' % img_names[i])
 
 pool = Pool(args.n_worker)
 for _ in tqdm(pool.imap(work, range(len(img_names))), total=len(img_names)):
