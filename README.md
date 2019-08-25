@@ -24,11 +24,11 @@ Here we provide a code to obtain **higher resolution** face images, by cropping 
 - Dataset
     - download the dataset
         - **img_celeba.7z**
-            - https://pan.baidu.com/s/1eSNpdRG#list/path=%2FCelebA%2FImg or
-            - https://drive.google.com/drive/folders/0B7EVK8r0v71pTUZsaXdaSnZBZzg
+            - [Baidu Netdisk](https://pan.baidu.com/s/1eSNpdRG#list/path=%2Fsharelink2785600790-938296576863897%2FCelebA%2FImg&parentPath=%2Fsharelink2785600790-938296576863897) or
+            - [Google Drive](https://drive.google.com/drive/folders/0B7EVK8r0v71pTUZsaXdaSnZBZzg)
         - **list_landmarks_celeba.txt**
-            - https://pan.baidu.com/s/1eSNpdRG#list/path=%2FCelebA%2FAnno&parentPath=%2F or
-            - https://drive.google.com/drive/folders/0B7EVK8r0v71pOC0wOVZlQnFfaGs
+            - [Baidu Netdisk](https://pan.baidu.com/s/1eSNpdRG#list/path=%2Fsharelink2785600790-938296576863897%2FCelebA%2FAnno&parentPath=%2Fsharelink2785600790-938296576863897) or
+            - [Google Drive](https://drive.google.com/drive/folders/0B7EVK8r0v71pOC0wOVZlQnFfaGs)
     - unzip the data
 
         ```console
