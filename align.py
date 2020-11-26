@@ -65,9 +65,7 @@ with open(args.landmark_file) as f:
     line = f.readline()
 n_landmark = len(re.split('[ ]+', line)[1:]) // 2
 
-# read data
-img_names = np.genfromtxt(args.landmark_file, dtype=np.str, usecols=0)
-landmarks = np.genfromtxt(args.landmark_file, dtype=np.float, usecols=range(1, n_landmark * 2 + 1)).reshape(-1, n_landmark, 2)
+# load standard landmark
 standard_landmark = np.genfromtxt(args.standard_landmark_file, dtype=np.float).reshape(n_landmark, 2)
 standard_landmark[:, 0] += args.move_w
 standard_landmark[:, 1] += args.move_h
@@ -79,12 +77,12 @@ if not os.path.isdir(data_dir):
     os.makedirs(data_dir)
 
 
-def work(i):  # a single work
+def work(name, landmark) -> str:  # a single work
     for _ in range(3):  # try three times
         try:
-            img = imread(os.path.join(args.img_dir, img_names[i]))
+            img = imread(os.path.join(args.img_dir, name))
             img_crop, tformed_landmarks = align_crop(img,
-                                                     landmarks[i],
+                                                     landmark,
                                                      standard_landmark,
                                                      crop_size=(args.crop_size_h, args.crop_size_w),
                                                      face_factor=args.face_factor,
@@ -92,7 +90,7 @@ def work(i):  # a single work
                                                      order=args.order,
                                                      mode=args.mode)
 
-            name = os.path.splitext(img_names[i])[0] + '.' + args.save_format
+            name = os.path.splitext(name)[0] + '.' + args.save_format
             path = os.path.join(data_dir, name)
             if not os.path.isdir(os.path.split(path)[0]):
                 os.makedirs(os.path.split(path)[0])
@@ -100,23 +98,35 @@ def work(i):  # a single work
 
             tformed_landmarks.shape = -1
             name_landmark_str = ('%s' + ' %.1f' * n_landmark * 2) % ((name, ) + tuple(tformed_landmarks))
-            succeed = True
-            break
+            return name_landmark_str
         except:
-            succeed = False
-    if succeed:
-        return name_landmark_str
-    else:
-        print('%s fails!' % img_names[i])
+            print('%s fails!' % name)
 
 
-pool = Pool(args.n_worker)
-name_landmark_strs = list(tqdm.tqdm(pool.imap(work, range(len(img_names))), total=len(img_names)))
-pool.close()
-pool.join()
+if __name__ == "__main__":
+    img_names = np.genfromtxt(args.landmark_file, dtype=np.str, usecols=0)
+    landmarks = np.genfromtxt(args.landmark_file, dtype=np.float,
+                              usecols=range(1, n_landmark * 2 + 1)).reshape(-1, n_landmark, 2)
 
-landmarks_path = os.path.join(save_dir, 'landmark.txt')
-with open(landmarks_path, 'w') as f:
-    for name_landmark_str in name_landmark_strs:
-        if name_landmark_str:
-            f.write(name_landmark_str + '\n')
+    n_pics = len(img_names)
+
+    landmarks_path = os.path.join(save_dir, 'landmark.txt')
+    f = open(landmarks_path, 'w')
+    pool = Pool(args.n_worker)
+    bar = tqdm.tqdm(total=n_pics)
+
+    tasks = []
+    for i in range(n_pics):
+        tasks.append(pool.apply_async(work, (img_names[i], landmarks[i]), callback=lambda _: bar.update()))
+
+    try:
+        result = tasks.pop(0).get()
+        if result is not None and result != "":
+            f.write(result + '\n')
+    except:
+        pass
+
+    pool.close()
+    pool.join()
+    bar.close()
+    f.close()
