@@ -66,9 +66,9 @@ with open(args.landmark_file) as f:
 n_landmark = len(re.split('[ ]+', line)[1:]) // 2
 
 # read data
-img_names = np.genfromtxt(args.landmark_file, dtype=np.str, usecols=0)
-landmarks = np.genfromtxt(args.landmark_file, dtype=np.float, usecols=range(1, n_landmark * 2 + 1)).reshape(-1, n_landmark, 2)
-standard_landmark = np.genfromtxt(args.standard_landmark_file, dtype=np.float).reshape(n_landmark, 2)
+img_names = np.genfromtxt(args.landmark_file, dtype=str, usecols=0)
+landmarks = np.genfromtxt(args.landmark_file, dtype=float, usecols=range(1, n_landmark * 2 + 1)).reshape(-1, n_landmark, 2)
+standard_landmark = np.genfromtxt(args.standard_landmark_file, dtype=float).reshape(n_landmark, 2)
 standard_landmark[:, 0] += args.move_w
 standard_landmark[:, 1] += args.move_h
 
